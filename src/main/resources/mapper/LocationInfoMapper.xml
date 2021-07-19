@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.buaa.locationservice.dao.LocationServiceDao" >
+    <resultMap id="BaseResultMap" type="com.buaa.locationservice.model.LocationInfo">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="program_number" jdbcType="VARCHAR" property="programNumber" />
+        <result column="platform_number" jdbcType="VARCHAR" property="platformNumber" />
+        <result column="compression_index" jdbcType="VARCHAR" property="compressionIndex" />
+        <result column="most_recent_location" jdbcType="VARCHAR" property="mostRecentLocation" />
+        <result column="most_recent_data_collection" jdbcType="VARCHAR" property="mostRecentDataCollection" />
+        <result column="location_class" jdbcType="VARCHAR" property="locationClass" />
+        <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+        <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+        <result column="state" jdbcType="VARCHAR" property="state" />
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+        <result column="location_info1" jdbcType="VARCHAR" property="locationInfo1" />
+        <!--<result column="location_info1_date" jdbcType="DATETIME"  property="locationInfo1Date"/>-->
+        <result column="location_info2" jdbcType="VARCHAR" property="locationInfo2" />
+        <result column="check_info" jdbcType="VARCHAR" property="checkInfo" />
+        <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+        <result column="angle" jdbcType="DOUBLE" property="angle" />
+        <result column="speed" jdbcType="DOUBLE" property="speed" />
+
+    </resultMap>
+
+    <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+        select id,program_number,platform_number,compression_index,most_recent_location,most_recent_data_collection,
+                location_class,latitude,longitude,state,create_date,location_info1,location_info2,check_info,device_id,speed,angle
+        from location_info
+        where id = #{id}
+    </select>
+
+    <select id="getAll" resultMap="BaseResultMap" >
+        select id,program_number,platform_number,compression_index,most_recent_location,most_recent_data_collection,
+                location_class,latitude,longitude,state,create_date,location_info1,location_info2,check_info,device_id,speed,angle
+        from location_info
+        order by create_date desc
+    </select>
+
+    <select id="getAllByDeviceId" resultMap="BaseResultMap" >
+        select id,program_number,platform_number,compression_index,most_recent_location,most_recent_data_collection,
+                location_class,latitude,longitude,state,create_date,location_info1,location_info2,check_info,device_id,speed,angle
+        from location_info
+        where device_id = #{id}
+        order by create_date desc
+    </select>
+
+    <select id="getByTime" resultMap="BaseResultMap" >
+        select id,program_number,platform_number,compression_index,most_recent_location,most_recent_data_collection,
+                location_class,latitude,longitude,state,create_date,location_info1,location_info2,check_info,device_id,speed,angle
+        from location_info
+        where device_id = #{deviceId}
+        and date(location_info1_date) between #{startDate} and #{endDate}
+        order by create_date desc
+    </select>
+
+    <insert id="saveLocationInfo" parameterType="com.buaa.locationservice.model.LocationInfo">
+        insert into location_info (program_number,platform_number,compression_index,most_recent_location,
+                                    most_recent_data_collection,location_class,latitude,longitude,location_info1,location_info1_date,
+                                    location_info2,check_info,state,create_date,device_id,speed,angle)
+        values (#{locationInfo.programNumber},#{locationInfo.platformNumber},#{locationInfo.compressionIndex},
+                #{locationInfo.mostRecentLocation},#{locationInfo.mostRecentDataCollection},#{locationInfo.locationClass},
+                #{locationInfo.latitude},#{locationInfo.longitude},#{locationInfo.locationInfo1},#{locationInfo.locationInfo1Date},
+                #{locationInfo.locationInfo2},#{locationInfo.checkInfo},#{locationInfo.state},#{locationInfo.createDate},#{locationInfo.deviceId},
+                #{locationInfo.angle},#{locationInfo.speed})
+    </insert>
+
+    <select id="getLast" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select id,program_number,platform_number,compression_index,most_recent_location,most_recent_data_collection,
+                  location_class,latitude,longitude,state,create_date,location_info1,location_info2,check_info,device_id,speed,angle
+        from location_info
+        where device_id = #{deviceId}
+        order by create_date desc limit 1
+    </select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.buaa.locationservice.dao.UserDeviceDao" >
+    <resultMap id="BaseResultMap" type="com.buaa.locationservice.model.UserDevice">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_id" jdbcType="BIGINT" property="userId" />
+        <result column="device_id" jdbcType="BIGINT" property="deviceId" />
+    </resultMap>
+
+    <insert id="saveUserDevice" parameterType="com.buaa.locationservice.model.UserDevice">
+        insert into user_device (user_id,device_id)
+        values (#{userDevice.userId},#{userDevice.deviceId})
+    </insert>
+
+    <select id="getByUserDevice" parameterType="com.buaa.locationservice.model.UserDevice" resultMap="BaseResultMap">
+        select id,user_id,device_id from user_device
+        where user_id = #{userDevice.userId} and device_id = #{userDevice.deviceId}
+    </select>
+
+    <delete id="deleteByUserDevice" parameterType="com.buaa.locationservice.model.UserDevice">
+        delete from user_device
+        where user_id = #{userDevice.userId} and device_id = #{userDevice.deviceId}
+    </delete>
+
+</mapper>

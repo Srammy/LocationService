@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.buaa.locationservice.dao.AuthDao">
+    <resultMap id="BaseResultMap" type="com.buaa.locationservice.model.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="raw_password" jdbcType="VARCHAR" property="rawPassword" />
+    </resultMap>
+
+    <select id="findByUsername" resultMap="BaseResultMap">
+        SELECT id, user_name, password
+        from user
+        where user_name = #{name};
+    </select>
+
+    <insert id="insert" parameterType="com.buaa.locationservice.model.User" useGeneratedKeys="true" keyProperty="id">
+        insert into user (user_name, password, raw_password) VALUES (#{userName}, #{password}, #{rawPassword});
+    </insert>
+
+    <insert id="insertRole">
+        insert into user_role (user_id, role_id) VALUES (#{userId}, #{roleId});
+    </insert>
+
+    <select id="findRoleByUserId" resultType="com.buaa.locationservice.model.Role">
+        select *
+        from role
+        where id in (SELECT role_id from user_role where user_id = #{userId});
+    </select>
+</mapper>

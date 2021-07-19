@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.buaa.locationservice.dao.UserDao" >
+    <resultMap id="BaseResultMap" type="com.buaa.locationservice.model.User">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="raw_password" jdbcType="VARCHAR" property="rawPassword" />
+    </resultMap>
+
+    <select id = "getLastUserId" resultMap="BaseResultMap">
+        SELECT id
+        FROM user
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select id,user_name,password,raw_password
+        from user
+        order by id desc
+    </select>
+
+    <select id="getByUser" parameterType="com.buaa.locationservice.model.User" resultMap="BaseResultMap">
+        select id,user_name,password,raw_password from user
+        where user_name = #{user.userName}
+    </select>
+
+    <insert id="save" parameterType="com.buaa.locationservice.model.User">
+        insert into user (user_name,password,raw_password)
+        values (#{user.userName},#{user.password},#{user.rawPassword})
+    </insert>
+
+    <delete id="deleteByUserNameAndPassword" parameterType="java.lang.String">
+        delete from user
+        where user_name = #{userName} and password = #{password}
+    </delete>
+</mapper>

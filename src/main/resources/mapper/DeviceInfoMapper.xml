@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.buaa.locationservice.dao.DeviceServiceDao" >
+    <resultMap id="BaseResultMap" type="com.buaa.locationservice.model.DeviceInfo">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="device_number" jdbcType="VARCHAR" property="deviceNumber" />
+        <result column="device_name" jdbcType="VARCHAR" property="deviceName" />
+    </resultMap>
+
+    <insert id="saveDeviceInfo" parameterType="com.buaa.locationservice.model.DeviceInfo">
+        insert into device_info (device_number,device_name)
+        values (#{deviceInfo.deviceNumber},#{deviceInfo.deviceName})
+    </insert>
+
+    <select id="getAll" resultMap="BaseResultMap">
+          select id,device_number,device_name
+          from device_info
+          order by id desc
+    </select>
+
+    <select id="getByDeviceNumber" parameterType="java.lang.String" resultMap="BaseResultMap">
+          select id,device_number,device_name
+          from device_info
+          where device_number = #{deviceNumber}
+    </select>
+
+    <select id="getByUser" parameterType="java.lang.Long" resultMap="BaseResultMap">
+          select a.id,a.device_number,a.device_name
+          from device_info a
+          inner join user_device b
+          where b.user_id = #{userId} and b.device_id = a.id
+    </select>
+
+    <select id="getByDeviceInfo" parameterType="com.buaa.locationservice.model.DeviceInfo" resultMap="BaseResultMap">
+         select id,device_number,device_name from device_info
+         where device_number = #{deviceInfo.deviceNumber} and device_name = #{deviceInfo.deviceName}
+    </select>
+
+    <delete id="deleteByDeviceNumber" parameterType="java.lang.String">
+        delete from device_info
+        where device_number = #{deviceNumber}
+    </delete>
+
+    <select id = "getLastDeviceId" resultMap="BaseResultMap">
+        SELECT id
+        FROM device_info
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+</mapper>
